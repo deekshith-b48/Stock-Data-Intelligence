@@ -1,0 +1,43 @@
+# Docker Compose override for development
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  api:
+    # Use local code with hot reload
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    
+    environment:
+      # Development settings
+      DEBUG: "true"
+      LOG_LEVEL: DEBUG
+      ENVIRONMENT: development
+    
+    volumes:
+      # Mount source code for hot reload
+      - ./src:/app/src:ro
+      - ./dashboard:/app/dashboard:ro
+      - ./scripts:/app/scripts:ro
+      - ./tests:/app/tests:ro
+    
+    # Expose debugger port
+    ports:
+      - "8000:8000"
+      - "5678:5678"  # Python debugger port
+  
+  db:
+    # Expose database port for local access
+    ports:
+      - "5432:5432"
+    
+    # Use local volume for easier inspection
+    volumes:
+      - ./postgres_data_dev:/var/lib/postgresql/data
+  
+  redis:
+    # Expose Redis port for local access
+    ports:
+      - "6379:6379"
+    
+    profiles: []  # Always start Redis in dev mode
