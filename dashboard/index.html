@@ -5,21 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Data Intelligence Dashboard</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Stock Data Intelligence Dashboard</h1>
-            <p class="subtitle">Real-time stock market analysis and visualization</p>
+            <div class="header-content">
+                <div class="header-left">
+                    <i class="fas fa-chart-line header-icon"></i>
+                    <div>
+                        <h1>Stock Data Intelligence Dashboard</h1>
+                        <p class="subtitle">Real-time stock market analysis and visualization</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="refresh-btn" class="refresh-btn" title="Refresh data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
         </header>
 
         <main>
             <div class="dashboard-grid">
                 <!-- Company List Section -->
                 <aside class="company-list-section">
-                    <h2>Companies</h2>
-                    <div id="loading-companies" class="loading">Loading companies...</div>
+                    <div class="section-header">
+                        <h2><i class="fas fa-building"></i> Companies</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="company-search" placeholder="Search companies..." />
+                        </div>
+                    </div>
+                    <div id="loading-companies" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading companies...
+                    </div>
                     <div id="error-companies" class="error" style="display: none;"></div>
                     <ul id="company-list" class="company-list"></ul>
                 </aside>
@@ -27,36 +51,90 @@
                 <!-- Chart Viewer Section -->
                 <section class="chart-section">
                     <div id="welcome-message" class="welcome">
+                        <i class="fas fa-chart-area welcome-icon"></i>
                         <h2>Welcome to Stock Dashboard</h2>
                         <p>Select a company from the list to view its stock performance</p>
+                        <div class="welcome-stats">
+                            <div class="stat-card">
+                                <i class="fas fa-building"></i>
+                                <span id="total-companies">0</span>
+                                <p>Companies</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Live</span>
+                                <p>Data Updates</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-clock"></i>
+                                <span>Real-time</span>
+                                <p>Analytics</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="chart-container" style="display: none;">
                         <div class="chart-header">
-                            <h2 id="chart-title">Stock Performance</h2>
-                            <div class="filter-controls">
-                                <button id="filter-30" class="filter-btn active" data-days="30">30 Days</button>
-                                <button id="filter-90" class="filter-btn" data-days="90">90 Days</button>
+                            <div class="chart-title-section">
+                                <h2 id="chart-title">Stock Performance</h2>
+                                <div class="price-indicator">
+                                    <span id="current-price" class="current-price">-</span>
+                                    <span id="price-change" class="price-change">-</span>
+                                </div>
+                            </div>
+                            <div class="chart-controls">
+                                <div class="filter-controls">
+                                    <button id="filter-7" class="filter-btn" data-days="7">
+                                        <i class="fas fa-calendar-day"></i> 7D
+                                    </button>
+                                    <button id="filter-30" class="filter-btn active" data-days="30">
+                                        <i class="fas fa-calendar-week"></i> 30D
+                                    </button>
+                                    <button id="filter-90" class="filter-btn" data-days="90">
+                                        <i class="fas fa-calendar-alt"></i> 90D
+                                    </button>
+                                </div>
+                                <button id="compare-btn" class="compare-btn">
+                                    <i class="fas fa-exchange-alt"></i> Compare
+                                </button>
                             </div>
                         </div>
-                        <div id="loading-chart" class="loading" style="display: none;">Loading chart data...</div>
+                        <div id="loading-chart" class="loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading chart data...
+                        </div>
                         <div id="error-chart" class="error" style="display: none;"></div>
                         <canvas id="stock-chart"></canvas>
                         
                         <div id="summary-section" class="summary-section">
-                            <h3>Summary Statistics</h3>
+                            <h3><i class="fas fa-chart-bar"></i> Summary Statistics</h3>
                             <div id="summary-content" class="summary-grid">
                                 <div class="summary-item">
-                                    <span class="summary-label">52-Week High</span>
-                                    <span id="summary-high" class="summary-value">-</span>
+                                    <i class="fas fa-arrow-up summary-icon high"></i>
+                                    <div>
+                                        <span class="summary-label">52-Week High</span>
+                                        <span id="summary-high" class="summary-value">-</span>
+                                    </div>
                                 </div>
                                 <div class="summary-item">
-                                    <span class="summary-label">52-Week Low</span>
-                                    <span id="summary-low" class="summary-value">-</span>
+                                    <i class="fas fa-arrow-down summary-icon low"></i>
+                                    <div>
+                                        <span class="summary-label">52-Week Low</span>
+                                        <span id="summary-low" class="summary-value">-</span>
+                                    </div>
                                 </div>
                                 <div class="summary-item">
-                                    <span class="summary-label">Average Close</span>
-                                    <span id="summary-avg" class="summary-value">-</span>
+                                    <i class="fas fa-chart-line summary-icon avg"></i>
+                                    <div>
+                                        <span class="summary-label">Average Close</span>
+                                        <span id="summary-avg" class="summary-value">-</span>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <i class="fas fa-percentage summary-icon volatility"></i>
+                                    <div>
+                                        <span class="summary-label">Volatility</span>
+                                        <span id="summary-volatility" class="summary-value">-</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -65,8 +143,40 @@
             </div>
         </main>
 
+        <!-- Compare Modal -->
+        <div id="compare-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Compare Stocks</h2>
+                    <button class="modal-close" id="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="compare-form">
+                        <div class="form-group">
+                            <label>Stock 1:</label>
+                            <select id="compare-stock1" class="stock-select">
+                                <option value="">Select stock...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock 2:</label>
+                            <select id="compare-stock2" class="stock-select">
+                                <option value="">Select stock...</option>
+                            </select>
+                        </div>
+                        <button id="compare-submit" class="btn-primary">
+                            <i class="fas fa-chart-line"></i> Compare
+                        </button>
+                    </div>
+                    <div id="compare-result" class="compare-result" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
         <footer>
-            <p>&copy; 2024 Stock Data Intelligence Dashboard</p>
+            <p>&copy; 2024 Stock Data Intelligence Dashboard | <i class="fas fa-heart"></i> Built with FastAPI & Chart.js</p>
         </footer>
     </div>
 
