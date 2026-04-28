@@ -2,6 +2,8 @@
 
 A full-stack financial data platform that collects, processes, stores, and visualizes stock market data with real-time analytics and insights.
 
+![Dashboard Screenshot](assets/images/dashboard-screenshot.png)
+
 ## Features
 
 ### Core Functionality
